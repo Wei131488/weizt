@@ -1,0 +1,50 @@
+name: Publish deployment packages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/publish-packages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install git-lfs
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq git-lfs
+          git lfs install
+
+      - name: Clone AtomGit packages with LFS
+        run: |
+          GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://atomgit.com/shamoyeyu/Automated_Deployment.git /tmp/atomgit
+          cd /tmp/atomgit
+          git lfs pull
+          echo "Packages:"
+          find . -type f -name '*.zip' -printf '%p %s bytes\n' | sort
+
+      - name: Create release and upload packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="deployment-packages-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Deployment packages ${TAG}" \
+            --notes "Migrated from AtomGit Automated_Deployment. This release contains the offline deployment packages." \
+            --latest
+          find /tmp/atomgit -type f -name '*.zip' -print0 | sort -z | while IFS= read -r -d '' f; do
+            echo "Uploading $(basename "$f")"
+            gh release upload "$TAG" "$f" --repo "$GITHUB_REPOSITORY" --clobber
+          done
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY"
