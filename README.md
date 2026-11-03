@@ -7,7 +7,7 @@
 AtomGit `Automated_Deployment` 仓库中的全部离线部署包，已通过 GitHub Actions
 自动发布到本仓库的 **Releases** 页面：
 
-- Releases: https://github.com/Wei131488/weizt/releases
+- Releases: https://github.com/Wei131488/weizt/releases/tag/deployment-packages-2
 
 发布内容包含：
 
@@ -86,7 +86,7 @@ https://atomgit.com/shamoyeyu/Automated_Deployment
 GitHub 发布：
 
 ```text
-https://github.com/Wei131488/weizt/releases
+https://github.com/Wei131488/weizt/releases/tag/deployment-packages-2
 ```
 
 > 以上为新增内容清单；大包发布以 Releases 页面实际资产为准。
