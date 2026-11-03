@@ -38,3 +38,55 @@ AtomGit `Automated_Deployment` 仓库中的全部离线部署包，已通过 Git
 - 安装包总体积约 3.8 GB，因此使用 Release 附件而不是 Git LFS。
 - 部署脚本和默认安装路径仍以各 zip 内 `README.md` 为准。
 - 默认安装根目录：`/data/anzhuan/plugin/`。
+
+## AtomGit 新增内容（2026-11）
+
+以下为 `Automated_Deployment` 最近新增的部署包清单；大包继续通过 GitHub Releases 发布，不使用 Git LFS。
+
+### AI 智能体
+
+| 包 | 内容 |
+|---|---|
+| `install_ai_base.zip` | Miniconda + Node 24 + pnpm + gh + tmux |
+| `install_claude_code.zip` | Claude Code 2.1.317 |
+| `install_codex.zip` | Codex CLI 0.166.0 |
+| `install_octop.zip` | Octop 1.0.3b2 |
+| `install_deepseek.zip` | DeepSeek dsh-superagent + DSH 0.2.1-rc.3 |
+
+### 大数据
+
+| 包 | 内容 |
+|---|---|
+| `install_bigdata_base.zip` | JDK17/11/21 + Conda + 主机名 |
+| `install_zookeeper.zip` | ZooKeeper 3.9.7 |
+| `install_hadoop.zip` | Hadoop 3.5.0 |
+| `install_hbase.zip` | HBase 3.0.0 |
+| `install_hive.zip` | Hive 4.2.1 + MariaDB |
+| `install_spark.zip` | Spark 4.3.0 |
+| `install_flink.zip` | Flink 2.2.0 |
+| `install_flume.zip` | Flume 1.11.0 |
+| `install_tez.zip` | Tez 0.10.5 |
+| `install_kafka.zip` | Kafka 4.4.0 KRaft |
+
+### 监控
+
+| 包 | 目标 |
+|---|---|
+| `install_zabbix_server.zip` | 101 主监控节点 |
+| `install_zabbix_agent.zip` | 104/105 被监控节点 |
+| `install_prometheus_server.zip` | 101 Prometheus + Grafana + Dashboard 16098 |
+| `install_prometheus_agent.zip` | 104/105 node_exporter |
+
+AtomGit 源：
+
+```text
+https://atomgit.com/shamoyeyu/Automated_Deployment
+```
+
+GitHub 发布：
+
+```text
+https://github.com/Wei131488/weizt/releases
+```
+
+> 以上为新增内容清单；大包发布以 Releases 页面实际资产为准。
