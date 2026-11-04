@@ -37,7 +37,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG="deployment-packages-${GITHUB_RUN_NUMBER}"
+          TAG="deployment-packages-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --title "Deployment packages ${TAG}" \
