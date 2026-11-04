@@ -90,3 +90,58 @@ https://github.com/Wei131488/weizt/releases/tag/deployment-packages-2
 ```
 
 > 以上为新增内容清单；大包发布以 Releases 页面实际资产为准。
+
+## AtomGit 新增内容（2026-11，Kubernetes / 离线 YUM）
+
+以下为 `Automated_Deployment` 最新追加的部署包，均保留在 AtomGit 仓库。
+
+### 容器化 Kubernetes
+
+| 包 | 内容 | 体积 |
+|---|---|---|
+| `k0s/install_k0s.zip` | k0s 1.37.2 三节点容器化 Kubernetes | 约 690 MB |
+| `k8s-master/install_k8s_master.zip` | kubeadm 1.37.2 主节点包 | 约 568 MB |
+| `k8s-worker/install_k8s_worker.zip` | kubeadm 1.37.2 工作节点包 | 约 325 MB |
+
+说明：
+
+- k0s 使用 Docker 容器运行 Kubernetes，支持 101/104/105 三节点。
+- kubeadm 使用 containerd 2.4.2 static，适配 Anolis OS 8.10 / glibc 2.28。
+- 主节点与工作节点包独立，避免工作节点安装 API Server、etcd、Dashboard 等冗余组件。
+- 已验证三节点 Ready，并完成 kubeadm 镜像版本、节点名、CNI 清理和 containerd 启动等待修复。
+
+### 离线 YUM 仓库
+
+| 包 | 内容 | 体积 |
+|---|---|---|
+| `offline-yum/install_offline_yum.zip` | Anolis 8.10 离线 YUM ISO + 一键挂载脚本 | 约 424 MB |
+
+包含 313 个 RPM，覆盖编译工具、Python 3、Java、网络工具、MariaDB、Nginx、Kubernetes 1.37.2 RPM 等；安装脚本自动挂载到：
+
+```text
+/data/anzhuan/plugin/offline-yum
+```
+
+并生成：
+
+```text
+/etc/yum.repos.d/offline-an8.repo
+```
+
+### 国内数据库资料
+
+本机 `未部署/domestic_databases` 已下载：
+
+```text
+openGauss 7.0.0 LTS（CentOS7 x86_64）
+OceanBase CE 4.6.0.1（EL8 RPM）
+TiDB 8.5.8（PD/TiKV/TiDB 容器镜像）
+```
+
+> 二进制大包不进入 Git 历史，继续通过 Release 附件分发。
+
+AtomGit 源：
+
+```text
+https://atomgit.com/shamoyeyu/Automated_Deployment
+```
