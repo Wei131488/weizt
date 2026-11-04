@@ -300,10 +300,10 @@ https://atomgit.com/shamoyeyu/Automated_Deployment
 发布策略：
 
 - **默认**：所有部署包提交并保存在 AtomGit，使用 Git LFS 管理。
-- **GitHub Releases**：仅作为下载镜像/溢出通道，不是唯一存储；用于 Gitee 单仓库 1 GB 限制、GitHub Actions 自动发布和海外下载加速。
+- **GitHub Releases**：仅作为下载镜像/溢出通道，不是唯一存储；改为**仅手动触发**，不再随 push 自动上传。
 - **Gitee**：代码和 README 同步；受单仓库附件 1 GB 限制，大包不重复存放在 Gitee。
 - 如果 GitHub Release 空间不足、上传失败或需要清理，**不删除 AtomGit 中的原始包**，并在 AtomGit README 中记录状态和替代下载方式。
-- 如果 AtomGit 空间充足，后续新增包继续放 AtomGit；只有确需 GitHub 镜像时才发布 Release。
+- 如果 AtomGit 空间充足，后续新增包继续放 AtomGit；只有确需 GitHub 镜像时才手动触发 Release。
 - 当前 AtomGit LFS 约 18 GiB，GitHub Release 发布任务会从 AtomGit 克隆后上传；若发布任务失败，以 AtomGit 包为准。
 
 ### GitHub Release 发布状态（2026-11）
