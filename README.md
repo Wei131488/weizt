@@ -306,6 +306,24 @@ https://atomgit.com/shamoyeyu/Automated_Deployment
 - 如果 AtomGit 空间充足，后续新增包继续放 AtomGit；只有确需 GitHub 镜像时才发布 Release。
 - 当前 AtomGit LFS 约 18 GiB，GitHub Release 发布任务会从 AtomGit 克隆后上传；若发布任务失败，以 AtomGit 包为准。
 
+### GitHub Release 发布状态（2026-11）
+
+- 最近一次 GitHub Actions 发布（run `41842953885`）失败，错误为：
+
+```text
+HTTP 422: Validation Failed
+```
+
+原因是目标标签 `deployment-packages-2` 已存在，属于标签冲突，不是存储空间不足。
+
+- 已把发布标签改为唯一标签：
+
+```text
+deployment-packages-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}
+```
+
+- 即使 GitHub Release 发布失败，AtomGit 中的包仍完整保留；GitHub Release 只是镜像/溢出通道。
+- 后续如果 GitHub Release 空间不足，不删除 AtomGit 原件，而是在本 README 记录失败原因和替代下载方式。
 ## 使用方式
 
 ```bash
