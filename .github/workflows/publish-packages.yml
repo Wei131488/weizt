@@ -1,10 +1,6 @@
 name: Publish deployment packages
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - ".github/workflows/publish-packages.yml"
   workflow_dispatch:
 
 permissions:
