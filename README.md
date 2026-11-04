@@ -289,41 +289,14 @@ Anolis 8 兼容性说明：Zabbix Server 使用 PHP 8.0 module；MariaDB 10.3 �
 - 网络组件端口已规避 Tomcat 8080，全部可在同一主机共存。
 - 当前默认部署为单机/最小化，生产环境需按后续方案改造。
 
-## 存储与镜像策略
+## 存储策略
 
-`AtomGit` 是本项目的**主仓库和主存储**，部署包、脚本、README 与 SHA256 均以 AtomGit 为准：
+- **AtomGit 是主仓库和主存储**，部署包、脚本、README 与 SHA256 均以 AtomGit 为准。
+- 后续新增包默认继续保存在 AtomGit，使用 Git LFS 管理。
+- **GitHub Releases 仅作为外网镜像/溢出通道**，需要时手动发布，不作为唯一存储。
+- **Gitee 仅同步代码和 README**；受单仓库附件 1 GB 限制，大包不重复存放。
+- 如果 GitHub 镜像失败或空间不足，以 AtomGit 中的原始包为准，不删除 AtomGit 原件。
 
-```text
-https://atomgit.com/shamoyeyu/Automated_Deployment
-```
-
-发布策略：
-
-- **默认**：所有部署包提交并保存在 AtomGit，使用 Git LFS 管理。
-- **GitHub Releases**：仅作为下载镜像/溢出通道，不是唯一存储；改为**仅手动触发**，不再随 push 自动上传。
-- **Gitee**：代码和 README 同步；受单仓库附件 1 GB 限制，大包不重复存放在 Gitee。
-- 如果 GitHub Release 空间不足、上传失败或需要清理，**不删除 AtomGit 中的原始包**，并在 AtomGit README 中记录状态和替代下载方式。
-- 如果 AtomGit 空间充足，后续新增包继续放 AtomGit；只有确需 GitHub 镜像时才手动触发 Release。
-- 当前 AtomGit LFS 约 18 GiB，GitHub Release 发布任务会从 AtomGit 克隆后上传；若发布任务失败，以 AtomGit 包为准。
-
-### GitHub Release 发布状态（2026-11）
-
-- 最近一次 GitHub Actions 发布（run `41842953885`）失败，错误为：
-
-```text
-HTTP 422: Validation Failed
-```
-
-原因是目标标签 `deployment-packages-2` 已存在，属于标签冲突，不是存储空间不足。
-
-- 已把发布标签改为唯一标签：
-
-```text
-deployment-packages-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}
-```
-
-- 即使 GitHub Release 发布失败，AtomGit 中的包仍完整保留；GitHub Release 只是镜像/溢出通道。
-- 后续如果 GitHub Release 空间不足，不删除 AtomGit 原件，而是在本 README 记录失败原因和替代下载方式。
 ## 使用方式
 
 ```bash
@@ -536,9 +509,3 @@ offline-yum/install_offline_yum.zip
 ```text
 /data/anzhuan/plugin/offline-yum
 ```
-
-## GitHub Release 镜像
-
-- GitHub Releases 仅作为下载镜像/溢出通道，不作为唯一存储。
-- 发布页：https://github.com/Wei131488/weizt/releases
-- 如果 GitHub 空间不足或发布失败，以 AtomGit 中的原始包为准，并在 AtomGit README 记录。
