@@ -1,5 +1,8 @@
 # Automated_Deployment
 
+> **分支说明**：`main` 是稳定主线。`openKylin-Server`、`ubuntu`、`debian` 均从 `main` 派生，属于验证分支；其中的一键部署组件、脚本和压缩包仍在验证阶段，请勿直接作为生产部署依据。详见 [BRANCHES.md](BRANCHES.md)。
+
+
 一键部署脚本集合，当前面向 Anolis OS 8.10 / RHEL 8 兼容环境。
 
 ## 版本说明
@@ -509,3 +512,82 @@ offline-yum/install_offline_yum.zip
 ```text
 /data/anzhuan/plugin/offline-yum
 ```
+
+## 日志服务（2026-11）
+
+| 目录 | 组件 | 版本 | 端口 | 验证 |
+|---|---|---|---|---|
+| `log-openobserve/` | OpenObserve | v1.1.2 | 5080 | 101/104 |
+| `log-opensearch/` | OpenSearch + Dashboards | 3.9.0 | 9200 / 5601 | 101/104 |
+| `log-grafana-prometheus/` | Grafana + Prometheus | 13.3.0 / 3.15.1 | 3000 / 9090 | 101/104 |
+| `log-fluent-bit/` | Fluent Bit | 5.1.5 | 无 | 101/104 |
+| `log-minio/` | MinIO | RELEASE.2025-09-07T16-13-09Z | 9000 / 9001 | 101/104 |
+
+说明：
+
+- 每个 zip 解压后执行 `bash scripts/install.sh`。
+- 安装目录统一为 `/data/anzhuan/plugin/<component>`。
+- 单机版已在 `192.168.1.101` 首次部署、`192.168.1.104` 二次验证。
+- OpenSearch 单机包与集群包分开；集群包已提供并完成三节点验证，单机包不要与集群配置混用。
+- 实验默认密码仅用于内网验证，生产必须修改。
+
+### OpenSearch 集群（2026-11）
+
+| 目录 | 用途 | 节点 |
+|---|---|---|
+| `log-opensearch-cluster-master/` | 主节点 + Dashboards | 192.168.1.101 |
+| `log-opensearch-cluster-worker/` | 数据/工作节点 | 192.168.1.104、192.168.1.105 |
+
+验证结果：
+
+```text
+3 节点集群 green
+opensearch-1  cluster_manager,data,ingest
+opensearch-2  data,ingest
+opensearch-3  data,ingest
+```
+
+注意：
+
+- 主节点包只用于 101，工作节点包只用于 104/105。
+- `cluster.initial_cluster_manager_nodes` 只保留 `opensearch-1`，避免把非 manager 节点列入 bootstrap 列表。
+- 必须放行 9200/tcp、9300/tcp、5601/tcp。
+- 单机包和集群包不要混用。
+
+## Jenkins（2026-11）
+
+| 目录 | 组件 | 版本 | 端口 | 验证 |
+|---|---|---|---|---|
+| `jenkins/` | Jenkins + JDK/Node/Maven/Git/Docker | 2.580.1 / 21.0.12.1 / 20.18.0 / 3.10.0 / 2.56.0 / 24.0.7 | 8080 | 101/104 |
+
+说明：
+
+- 压缩包包含 Jenkins WAR、JDK、Node.js、Maven、Git 源码和 Docker，不依赖外网附件。
+- 安装目录：`/data/anzhuan/plugin/jenkins`。
+- 启停脚本：`/data/anzhuan/plugin/jenkins/scripts/{start,stop,restart,status}.sh`。
+- Resin 4.0.36 仅作为历史附件保留，默认不启用。
+- 首次解锁密码：`/data/anzhuan/plugin/jenkins/home/secrets/initialAdminPassword`。
+- 单机首次部署 101，104 二次验证通过。
+
+## 国产数据库（2026-11）
+
+| 目录 | 组件 | 版本 | 端口 | 验证 |
+|---|---|---|---|---|
+| `opengauss/` | openGauss | 7.0.0 LTS | 15432 | 101/104 |
+| `tidb/` | TiDB + PD + TiKV | 8.5.8 | 4000 / 2379 / 20160 | 101/104 |
+| `oceanbase/` | OceanBase CE | 4.6.0.1 | 2881 / 2882 / 2886 | 101/104 |
+
+说明：
+
+- 两个包均为单机最小拓扑，不是生产 HA 集群。
+- openGauss 使用 `omm` 用户，端口改为 15432，避免与 PostgreSQL 冲突。
+- openGauss 需要兼容库：`libreadline.so.6`、`libncurses.so.5`、`libtinfo.so.5`、`openblas`；安装脚本已处理。
+- TiDB 使用 Docker host network，包含 PD、TiKV、TiDB 三个容器。
+- OceanBase CE 4.6.0.1 使用 obshell 单机初始化，已包含 RPM 和 MySQL 客户端。
+
+## GitHub 镜像说明（2026-11）
+
+- 本仓库只同步 README、分支说明、目录清单和校验清单。
+- 完整安装包、Jenkins、openGauss、TiDB、OceanBase、日志服务包均以 AtomGit 主仓库为准。
+- GitHub Releases 仅在需要外网镜像时手动发布，不是唯一存储。
+- 详细说明见 [MIRROR.md](MIRROR.md)。
